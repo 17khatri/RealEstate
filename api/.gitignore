@@ -1,0 +1,29 @@
+# ==============================
+# Python Backend Ignore Rules
+# ==============================
+
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Uploaded / generated files (IMPORTANT)
+base/static/profile_pictures/
+base/static/property_images/
