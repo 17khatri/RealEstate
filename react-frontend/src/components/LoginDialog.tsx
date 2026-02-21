@@ -57,78 +57,105 @@ export default function LoginDialog({ open, onClose }: Props) {
             setToken(response.data.token)
             localStorage.setItem("token", response.data.token)
             reset()
+            onClose()
         } catch (error) {
             console.error("Login failed:", error)
         }
     }
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-            <DialogContent
-                className="relative p-8"
-                sx={{
-                    backdropFilter: "blur(20px)",
-                    background: "linear-gradient(135deg, #1e293b, #0f172a)",
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="xs"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    borderRadius: "20px",
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(25px)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
                     color: "white",
-                }}
-            >
+                },
+            }}
+        >
+            <DialogContent sx={{ p: 4, position: "relative" }}>
+
                 {/* Close Button */}
                 <IconButton
                     onClick={onClose}
-                    sx={{ position: "absolute", right: 10, top: 10, color: "white" }}
+                    sx={{
+                        position: "absolute",
+                        right: 12,
+                        top: 12,
+                        color: "white",
+                    }}
                 >
                     <Close />
                 </IconButton>
 
-                <Typography variant="h4" fontWeight="bold" gutterBottom>
-                    Welcome Back 👋
-                </Typography>
-
-                <Typography variant="body2" mb={3} color="gray">
-                    Login to continue to your account
-                </Typography>
-
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex flex-col gap-5"
+                {/* Title */}
+                <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    gutterBottom
+                    sx={{ textAlign: "center" }}
                 >
+                    Welcome Back
+                </Typography>
+
+                <Typography
+                    variant="body2"
+                    sx={{ textAlign: "center", mb: 4, opacity: 0.7 }}
+                >
+                    Sign in to manage your properties
+                </Typography>
+
+                <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+
+                    {/* Email */}
                     <Controller
                         name="user_email"
                         control={control}
-                        defaultValue=""
-                        rules={{ required: "Email is required" }}
                         render={({ field, fieldState }) => (
                             <TextField
                                 {...field}
-                                label="Email"
-                                variant="outlined"
+                                label="Email Address"
                                 fullWidth
+                                margin="normal"
                                 error={!!fieldState.error}
                                 helperText={fieldState.error?.message}
                                 sx={{
-                                    input: { color: "white" },
-                                    label: { color: "gray" },
                                     "& .MuiOutlinedInput-root": {
-                                        "& fieldset": { borderColor: "gray" },
-                                        "&:hover fieldset": { borderColor: "#3b82f6" },
+                                        borderRadius: "12px",
+                                        color: "white",
+                                        "& fieldset": {
+                                            borderColor: "rgba(255,255,255,0.3)",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#3b82f6",
+                                        },
+                                    },
+                                    "& .MuiInputLabel-root": {
+                                        color: "rgba(255,255,255,0.7)",
                                     },
                                 }}
                             />
                         )}
                     />
 
+                    {/* Password */}
                     <Controller
                         name="user_password"
                         control={control}
-                        defaultValue=""
-                        rules={{ required: "Password is required" }}
                         render={({ field, fieldState }) => (
                             <TextField
                                 {...field}
                                 type={showPassword ? "text" : "password"}
                                 label="Password"
                                 fullWidth
+                                margin="normal"
                                 error={!!fieldState.error}
                                 helperText={fieldState.error?.message}
                                 InputProps={{
@@ -145,27 +172,38 @@ export default function LoginDialog({ open, onClose }: Props) {
                                     ),
                                 }}
                                 sx={{
-                                    input: { color: "white" },
-                                    label: { color: "gray" },
                                     "& .MuiOutlinedInput-root": {
-                                        "& fieldset": { borderColor: "gray" },
-                                        "&:hover fieldset": { borderColor: "#3b82f6" },
+                                        borderRadius: "12px",
+                                        color: "white",
+                                        "& fieldset": {
+                                            borderColor: "rgba(255,255,255,0.3)",
+                                        },
+                                        "&:hover fieldset": {
+                                            borderColor: "#3b82f6",
+                                        },
+                                    },
+                                    "& .MuiInputLabel-root": {
+                                        color: "rgba(255,255,255,0.7)",
                                     },
                                 }}
                             />
                         )}
                     />
 
+                    {/* Login Button */}
                     <Button
                         type="submit"
-                        variant="contained"
+                        fullWidth
                         size="large"
                         sx={{
-                            mt: 2,
-                            borderRadius: "12px",
-                            background: "linear-gradient(90deg, #3b82f6, #6366f1)",
-                            textTransform: "none",
+                            mt: 3,
+                            borderRadius: "30px",
+                            padding: "12px",
                             fontWeight: "bold",
+                            textTransform: "none",
+                            background: "linear-gradient(90deg,#3b82f6,#6366f1)",
+                            boxShadow: "0 10px 25px rgba(59,130,246,0.4)",
+                            color: "white",
                         }}
                     >
                         Login
