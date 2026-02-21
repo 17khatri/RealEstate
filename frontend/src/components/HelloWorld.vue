@@ -1,26 +1,6 @@
 <template>
   <v-card>
     <v-layout>
-      <v-navigation-drawer v-if="isLoggedIn" v-model="drawer" :rail="rail" permanent @click="rail = false">
-        <v-list>
-          <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg" :title=user.user_name
-            :subtitle="user.user_email">
-            <template v-slot:append>
-              <v-btn icon="mdi-chevron-left" variant="text" @click.stop="rail = !rail"></v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
-
-        <v-divider></v-divider>
-
-        <v-list density="compact" nav>
-          <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-          <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
-          <v-list-item prepend-icon="mdi-account-group-outline" title="Users" @click="goToUsers" value="users"></v-list-item>
-          <v-spacer></v-spacer>
-          <v-list-item prepend-icon="mdi-logout" title="Log Out" value="logout" @click="handleLogout"></v-list-item>
-        </v-list>
-      </v-navigation-drawer>
       <v-main class="main-bg">
         <h1 class="header">Welcome to the Real Estate World</h1>
         <v-btn rounded="xl" to="/properties" class="custom-button" prepend-icon="mdi-open-in-new">
@@ -66,22 +46,19 @@
     </v-layout>
   </v-card>
 </template>
+
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { loginUser, getProfile } from '../api/user'
+import { useAuth } from '@/auth/useAuth'
+
+const { isLoggedIn, login } = useAuth()
 
 const dialog = ref(false)
 const user_email = ref('')
 const user_password = ref('')
 const message = ref('')
 const loading = ref(false)
-const drawer = ref(true)
-const rail = ref(true)
-const isLoggedIn = ref(false)
-const user = ref(null)
-
-const router = useRouter()
 
 const handleLogin = async () => {
   loading.value = true
@@ -93,59 +70,22 @@ const handleLogin = async () => {
       user_password: user_password.value,
     }
 
-    const response = await loginUser(payload)
+    // 1️⃣ Authenticate user
+    const res = await loginUser(payload)
 
-    localStorage.setItem('token', response.data.data.token)
-
-    const profileResponse = await getProfile()
-    user.value = profileResponse.data.data
-    isLoggedIn.value = true
-
-    user_email.value = ''
-    user_password.value = ''
-    message.value = ''
+    // 2️⃣ Save token & mark logged in
+    login(res.data.data.token)
 
     dialog.value = false
   } catch (err) {
-    message.value =
-      err?.response?.data?.message || 'Invalid email or password'
+    message.value = err?.response?.data?.message || 'Invalid credentials'
   } finally {
     loading.value = false
   }
 }
 
-const handleLogout = () => {
-  localStorage.removeItem('token')
-  isLoggedIn.value = false
-  user.value = null
-}
-
-const onDialogChange = (value) => {
-  if (!value) {
-    user_email.value = ''
-    user_password.value = ''
-    message.value = ''
-  }
-}
-
-const goToUsers = () =>{
-  router.push('/Users')
-}
-
-onMounted(async () => {
-  const token = localStorage.getItem('token')
-  isLoggedIn.value = !!token
-
-  if (token) {
-    try {
-      const profileResponse = await getProfile()
-      user.value = profileResponse.data.data
-    } catch (err) {
-      console.error('Failed to load profile', err)
-    }
-  }
-})
 </script>
+
 
 <style scoped>
 .main-bg {
