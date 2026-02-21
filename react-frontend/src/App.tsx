@@ -1,15 +1,18 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react"
+import { Button } from "@mui/material"
+import LoginDialog from "./components/LoginDialog"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [open, setOpen] = useState(false)
 
   return (
-    <>
-      <p className="text-red-500">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+      <Button variant="contained" onClick={() => setOpen(true)}>
+        Open Login
+      </Button>
+
+      <LoginDialog open={open} onClose={() => setOpen(false)} />
+    </div>
   )
 }
 
